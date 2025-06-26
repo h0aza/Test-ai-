@@ -1,0 +1,59 @@
+{
+  "version": 2,
+  "name": "moaaz-ai",
+  "buildCommand": "vite build",
+  "outputDirectory": "dist/public",
+  "framework": null,
+  "installCommand": "npm install",
+  "functions": {
+    "api/*.ts": {
+      "maxDuration": 30,
+      "memory": 512,
+      "runtime": "nodejs20.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "src": "/health",
+      "dest": "/api/health",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))",
+      "dest": "/dist/public/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/public/index.html",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      }
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PERMANENT_SERVICE": "true"
+  },
+  "regions": ["iad1"]
+  // تم إزالة "headers", "cleanUrls", و "trailingSlash" من هنا
+  // لأنهما يتعارضان مع وجود "routes"
+}
